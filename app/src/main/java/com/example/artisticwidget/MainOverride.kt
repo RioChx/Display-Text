@@ -1,4 +1,5 @@
-package com.example.artisticwidget
+package com.artistic.widget
+
 import androidx.compose.runtime.*
 
 object MainOverride {
