@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
@@ -19,14 +18,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)) {
-                
+            Box(modifier = Modifier.fillMaxSize().background(Color.DarkGray)) {
                 Text(
                     text = MainControlRegistry.ledText,
                     color = Color.Cyan,
-                    fontSize = 30.sp,
+                    fontSize = 40.sp,
                     modifier = Modifier
                         .offset { 
                             IntOffset(
@@ -37,7 +33,7 @@ class MainActivity : ComponentActivity() {
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                // The Hook: Updating the Main Override
+                                // Syncing back to the Main Override
                                 MainControlRegistry.clockX += dragAmount.x
                                 MainControlRegistry.clockY += dragAmount.y
                             }
