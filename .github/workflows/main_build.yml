@@ -1,26 +1,26 @@
-name: Build Drag and Drop APK
-on: [push, pull_request]
+name: Artistic Widget Pro Build
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
-      - name: Clean and Build
-        run: |
-          chmod +x gradlew
-          ./gradlew clean assembleDebug
+      - name: Grant Exec Permissions
+        run: chmod +x gradlew
 
-      - name: Upload APK
+      - name: Build APK (Clean & Assemble)
+        run: ./gradlew clean assembleDebug
+
+      - name: Upload Finished APK
         uses: actions/upload-artifact@v3
         with:
-          name: DragAndDrop-APK
+          name: ArtisticWidgetPro-v1
           path: app/build/outputs/apk/debug/app-debug.apk
