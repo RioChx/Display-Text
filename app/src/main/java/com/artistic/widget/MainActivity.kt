@@ -18,7 +18,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Box(modifier = Modifier.fillMaxSize().background(Color(0xFF121212))) {
+            // Using DarkGray background to ensure the screen isn't pure black
+            Box(modifier = Modifier.fillMaxSize().background(Color(0xFF2B2B2B))) {
                 Text(
                     text = MainControlRegistry.ledText,
                     color = Color.Cyan,
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                // Updating the Main Override state
+                                // Syncing back to the Main Override file
                                 MainControlRegistry.clockX += dragAmount.x
                                 MainControlRegistry.clockY += dragAmount.y
                             }
