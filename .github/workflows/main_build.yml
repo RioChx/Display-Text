@@ -13,15 +13,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # This Action replaces the manual 'gradle wrapper' command
-      # It installs the engine correctly for Android 13
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.4 
+          gradle-version: 8.4
 
+      # EXPERT MOVE: Run 'gradle' directly instead of './gradlew'
+      # This ignores the missing wrapper files in your repository.
       - name: Build APK with Drag-and-Drop Sync
-        run: chmod +x gradlew && ./gradlew assembleDebug
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
