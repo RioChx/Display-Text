@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "ArtisticWidgetPro"
+rootProject.name = "ArtisticWidgetStudio"
 include(":app")
