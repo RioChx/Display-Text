@@ -1,4 +1,5 @@
-package com.example.artisticwidget
+package com.artistic.widget
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,8 +21,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .offset { IntOffset(MainOverride.clockX.roundToInt(), MainOverride.clockY.roundToInt()) }
                         .pointerInput(Unit) {
-                            detectDragGestures { _, dragAmount ->
-                                // THE HOOK: Updating Main Override in real-time
+                            detectDragGestures { change, dragAmount ->
+                                change.consume()
+                                // Update the Main Override Truth
                                 MainOverride.clockX += dragAmount.x
                                 MainOverride.clockY += dragAmount.y
                             }
