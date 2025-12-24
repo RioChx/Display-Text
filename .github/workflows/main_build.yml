@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Drag and Drop APK
 on: [push, pull_request]
 
 jobs:
@@ -14,11 +14,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # This command displays your structure in the logs to verify the com.example folder is gone
-      - name: View Project Structure
-        run: find . -maxdepth 5 -not -path '*/.*'
-
-      - name: Build with Gradle (Clean and Assemble)
+      - name: Clean and Build
         run: |
           chmod +x gradlew
           ./gradlew clean assembleDebug
@@ -26,5 +22,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: ArtisticWidget-Clean-APK
+          name: DragAndDrop-APK
           path: app/build/outputs/apk/debug/app-debug.apk
