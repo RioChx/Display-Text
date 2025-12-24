@@ -1,12 +1,12 @@
 package com.artistic.widget
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.geometry.Offset
 
 object MainControlRegistry {
-    // These coordinates are used by both the App and the Widget
-    var clockX by mutableStateOf(150f)
-    var clockY by mutableStateOf(150f)
+    // This stores the final "Dropped" position from your drag-and-drop action
+    var droppedPosition by mutableStateOf(Offset(100f, 100f))
     
-    // Changing this text here overrides the text in the whole project [cite: 2025-12-13]
-    var ledText by mutableStateOf("Digital Art Active")
+    // Changing this text here updates the draggable item everywhere [cite: 2025-12-13]
+    var dragItemText by mutableStateOf("Drag Me Anywhere")
 }
