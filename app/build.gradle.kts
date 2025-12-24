@@ -4,18 +4,17 @@ plugins {
 }
 
 android {
-    namespace = "com.example.artisticwidget"
+    namespace = "com.artistic.widget"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.example.artisticwidget"
+        applicationId = "com.artistic.widget"
         minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
 
-    // THIS FIXES THE "UNRESOLVED REFERENCE" AND VERSION CONFLICT
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
