@@ -1,32 +1,24 @@
 package com.example.artisticwidget
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
-/**
- * THE MAIN OVERRIDE: Single Source of Truth
- * All UI components observe these reactive states.
- */
 object MainOverride {
-    // LED Text Settings
-    var ledText = mutableStateOf("ARTISTIC WIDGET PRO")
-    var ledColor = mutableStateOf(Color(android.graphics.Color.parseColor("#00ff00")))
-    var ledOffset = mutableStateOf(Offset(50f, 25f))
+    // LED TEXT GLOBAL SETTINGS
+    var ledText by mutableStateOf("25 Dec 2025")
+    var ledColor by mutableStateOf(Color.Cyan)
     
-    // Clock Settings (No seconds)
-    var clockEnabled = mutableStateOf(true)
-    var clockColor = mutableStateOf(Color(android.graphics.Color.parseColor("#ffffff")))
-    var clockOffset = mutableStateOf(Offset(50f, 55f))
-    var clockScale = mutableStateOf(1.8f)
-
-    // Date Settings
-    var dateEnabled = mutableStateOf(true)
-    var dateOffset = mutableStateOf(Offset(50f, 80f))
+    // DRAG-AND-DROP COORDINATES (The State Sync)
+    // These are updated in real-time by the Drag Hooks
+    var clockX by mutableStateOf(0f)
+    var clockY by mutableStateOf(0f)
     
-    // Global Styling
-    var backgroundColor = mutableStateOf(Color(android.graphics.Color.parseColor("#000000")))
-    var backgroundOpacity = mutableStateOf(0.85f)
-    var widgetWidth = mutableStateOf(350f)
-    var widgetHeight = mutableStateOf(200f)
+    var dateX by mutableStateOf(0f)
+    var dateY by mutableStateOf(100f)
+    
+    var ledX by mutableStateOf(0f)
+    var ledY by mutableStateOf(-100f)
 }
