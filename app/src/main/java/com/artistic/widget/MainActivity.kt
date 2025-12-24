@@ -3,6 +3,7 @@ package com.artistic.widget
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -13,7 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
@@ -35,18 +36,26 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WidgetPreview() {
-    val infiniteTransition = rememberInfiniteTransition(label = "Global")
+    val infiniteTransition = rememberInfiniteTransition(label = "ArtisticAnimations")
     
-    // 1Hz Colon Blink Logic
-    val colonAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 0f,
-        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse), label = "Blink"
+    // 1. Rainbow Animation Logic
+    val rainbowColor by infiniteTransition.animateColor(
+        initialValue = Color.Red,
+        targetValue = Color.Blue,
+        animationSpec = infiniteRepeatable(
+            tween(durationMillis = 3000 / MainOverride.ledAnimSpeed, easing = LinearEasing),
+            RepeatMode.Reverse
+        ), label = "Rainbow"
     )
 
-    // Glow Pulse Animation
-    val glowSize by infiniteTransition.animateDp(
-        initialValue = 4.dp, targetValue = 14.dp,
-        animationSpec = infiniteRepeatable(tween(2000 / MainOverride.ledAnimSpeed), RepeatMode.Reverse), label = "Pulse"
+    // 2. Pulse Animation Logic
+    val pulseScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.2f,
+        animationSpec = infiniteRepeatable(
+            tween(durationMillis = 1000 / MainOverride.ledAnimSpeed),
+            RepeatMode.Reverse
+        ), label = "Pulse"
     )
 
     Box(
@@ -55,43 +64,39 @@ fun WidgetPreview() {
             .clip(RoundedCornerShape(20.dp))
             .background(MainOverride.canvasBgColor.copy(alpha = MainOverride.canvasOpacity))
     ) {
-        // Draggable LED Layer
+        // Draggable Animated LED Layer [cite: 2025-12-13]
         DraggableLayer(MainOverride.ledOffset, { MainOverride.ledOffset = it }) {
+            val finalColor = if (MainOverride.ledAnimationMode == "Rainbow") rainbowColor else MainOverride.ledColor
+            val finalScale = if (MainOverride.ledAnimationMode == "Pulse") pulseScale else 1f
+
             Text(
                 text = MainOverride.ledText,
-                color = MainOverride.ledColor,
+                color = finalColor,
                 fontSize = MainOverride.ledFontSize.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.shadow(glowSize, Color.Transparent, ambientColor = MainOverride.ledColor)
+                modifier = Modifier.scale(finalScale)
             )
         }
 
-        // Draggable Clock Layer (12h format)
-        DraggableLayer(MainOverride.clockOffset, { MainOverride.clockOffset = it }) {
-            Row {
-                Text("11", color = MainOverride.clockColor, fontSize = 58.sp, fontWeight = FontWeight.Bold)
-                Text(":", color = MainOverride.clockColor.copy(alpha = colonAlpha), fontSize = 58.sp, fontWeight = FontWeight.Bold)
-                Text("24", color = MainOverride.clockColor, fontSize = 58.sp, fontWeight = FontWeight.Bold)
+        // Draggable Clock Layer
+        if (MainOverride.showClock) {
+            DraggableLayer(MainOverride.clockOffset, { MainOverride.clockOffset = it }) {
+                Text("11 : 24", color = Color.White, fontSize = 54.sp, fontWeight = FontWeight.Bold)
             }
-        }
-
-        // Draggable Date Layer
-        DraggableLayer(MainOverride.dateOffset, { MainOverride.dateOffset = it }) {
-            Text(text = MainOverride.dateText, color = MainOverride.dateColor, fontSize = 16.sp)
         }
     }
 }
 
 @Composable
-fun DraggableLayer(offset: Offset, onMove: (Offset) -> Unit, content: @Composable () -> Unit) {
+fun DraggableLayer(offset: androidx.compose.ui.geometry.Offset, onMove: (androidx.compose.ui.geometry.Offset) -> Unit, content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
                     change.consume()
-                    // Reactive sync back to the Main Override registry [cite: 2025-12-13]
-                    onMove(Offset(offset.x + dragAmount.x, offset.y + dragAmount.y))
+                    // Sync back to Main Override Registry [cite: 2025-12-13]
+                    onMove(androidx.compose.ui.geometry.Offset(offset.x + dragAmount.x, offset.y + dragAmount.y))
                 }
             }
     ) { content() }
