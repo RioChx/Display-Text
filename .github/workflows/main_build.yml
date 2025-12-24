@@ -1,4 +1,4 @@
-name: Artistic Widget Pro Build
+name: Artistic Widget Studio Pro Build
 on: [push]
 
 jobs:
@@ -13,14 +13,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3 # Use the official action to bypass missing jars
+      - name: Setup Gradle Build Environment
+        uses: gradle/actions/setup-gradle@v4 # This fixes the ClassNotFound error
 
-      - name: Build APK (Main Override Sync)
+      - name: Build APK (Main Override Protocol)
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Finished APK
+        uses: actions/upload-artifact@v4 # Upgraded to v4 to avoid deprecation
         with:
-          name: ArtisticWidgetPro-v1
+          name: ArtisticWidgetStudio-APK
           path: app/build/outputs/apk/debug/app-debug.apk
