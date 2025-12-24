@@ -1,27 +1,26 @@
-name: Artistic Widget Studio Pro Build
+name: Artistic Widget Pro Build
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # Upgraded to v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4 # Upgraded to v4
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Grant Exec Permissions
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3 # Use the official action to bypass missing jars
 
-      - name: Build APK (Clean & Assemble)
-        run: ./gradlew clean assembleDebug
+      - name: Build APK (Main Override Sync)
+        run: gradle assembleDebug --no-daemon
 
-      - name: Upload Finished APK
-        uses: actions/upload-artifact@v4 # FIXED: Upgraded from v3 to v4
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ArtisticWidgetPro-v1
           path: app/build/outputs/apk/debug/app-debug.apk
