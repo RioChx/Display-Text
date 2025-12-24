@@ -18,25 +18,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Dark background ensures visibility
+            // Background canvas for the drop zone
             Box(modifier = Modifier.fillMaxSize().background(Color(0xFF1A1A1A))) {
                 Text(
-                    text = MainControlRegistry.ledText,
+                    text = MainControlRegistry.dragItemText,
                     color = Color.Cyan,
-                    fontSize = 40.sp,
+                    fontSize = 32.sp,
                     modifier = Modifier
                         .offset { 
                             IntOffset(
-                                MainControlRegistry.clockX.roundToInt(), 
-                                MainControlRegistry.clockY.roundToInt()
+                                MainControlRegistry.droppedPosition.x.roundToInt(), 
+                                MainControlRegistry.droppedPosition.y.roundToInt()
                             ) 
                         }
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                // Updates the central Registry [cite: 2025-12-13]
-                                MainControlRegistry.clockX += dragAmount.x
-                                MainControlRegistry.clockY += dragAmount.y
+                                // Logic: As you drag, we update the Main Override [cite: 2025-12-13]
+                                val newX = MainControlRegistry.droppedPosition.x + dragAmount.x
+                                val newY = MainControlRegistry.droppedPosition.y + dragAmount.y
+                                MainControlRegistry.droppedPosition = androidx.compose.ui.geometry.Offset(newX, newY)
                             }
                         }
                 )
