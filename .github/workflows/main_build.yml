@@ -1,25 +1,32 @@
-name: Artistic Studio APK Generator
+name: Artistic Studio Milestone Build
 on:
   push:
-    branches:
-      - "**" # This fixes the "nothing run" issue by tracking ALL branches
+    branches: ["**"] # Tracks your specific branch automatically [cite: 2025-12-25]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: set up JDK 17
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
-      - name: Build APK
-        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
-      - name: Upload Artifact
+
+      - name: Setup Global Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.7 # Bypasses your local missing wrapper [cite: 2025-12-25]
+
+      - name: Build APK (Main Override Protocol)
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload Finished APK
         uses: actions/upload-artifact@v4
         with:
-          name: ArtisticWidget-Milestone
+          name: ArtisticWidget-Studio-Milestone
           path: app/build/outputs/apk/debug/app-debug.apk
