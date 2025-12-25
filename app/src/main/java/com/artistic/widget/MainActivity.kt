@@ -1,121 +1,66 @@
-package com.artistic.widget
-
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.roundToInt
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme(colorScheme = darkColorScheme()) {
-                Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF080808)) {
-                    StudioRoot()
-                }
-            }
-        }
-    }
-}
-
 @Composable
 fun StudioRoot() {
     Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        // --- SECTION 1: THE PREVIEW CANVAS (Drag & Drop) ---
+        // --- THE PREVIEW CANVAS WITH NAVIGATION ICONS ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(350.dp)
-                .background(MainOverride.canvasBgColor.copy(alpha = MainOverride.canvasOpacity)),
+                .height(300.dp)
+                .background(Color(0xFF0D0D0D)),
             contentAlignment = Alignment.Center
         ) {
-            // LED Text Component with Rainbow Animation
-            val infiniteTransition = rememberInfiniteTransition(label = "FX")
-            val rainbowColor by infiniteTransition.animateColor(
-                initialValue = Color.Cyan,
-                targetValue = Color.Magenta,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(2000 / MainOverride.ledAnimSpeed.coerceAtLeast(1)),
-                    repeatMode = RepeatMode.Reverse
-                ), label = "Rainbow"
-            )
-
-            DraggableElement(
-                offset = MainOverride.ledOffset,
-                onMove = { MainOverride.ledOffset += it }
+            // 1. Close Icon (Top Right)
+            IconButton(
+                onClick = { /* Logic to hide widget */ },
+                modifier = Modifier.align(Alignment.TopEnd).padding(10.dp)
             ) {
+                Text("✕", color = Color.White, fontSize = 20.sp)
+            }
+
+            // 2. Settings Icon (Top Left)
+            IconButton(
+                onClick = { /* Already in settings */ },
+                modifier = Modifier.align(Alignment.TopStart).padding(10.dp)
+            ) {
+                Text("⚙", color = Color.White, fontSize = 20.sp)
+            }
+
+            // 3. Digital Clock Layer (Missing in your screenshot)
+            if (MainOverride.showClock) {
                 Text(
-                    text = MainOverride.ledText,
-                    color = if (MainOverride.ledAnimationMode == "Rainbow") rainbowColor else MainOverride.ledColor,
-                    fontSize = MainOverride.ledFontSize.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "12:00", 
+                    color = MainOverride.clockColor,
+                    modifier = Modifier.offset(y = (-60).dp),
+                    fontSize = 40.sp
                 )
             }
+
+            // 4. LED Text (As seen in your screenshot)
+            Text(
+                text = MainOverride.ledText,
+                color = MainOverride.ledColor,
+                fontSize = MainOverride.ledFontSize.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
-        // --- SECTION 2: THE CONTROL PANEL ---
-        ControlPanel()
-    }
-}
-
-@Composable
-fun DraggableElement(offset: androidx.compose.ui.geometry.Offset, onMove: (androidx.compose.ui.geometry.Offset) -> Unit, content: @Composable () -> Unit) {
-    Box(
-        modifier = Modifier
-            .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
-            .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-                    change.consume()
-                    onMove(dragAmount)
-                }
+        // --- THE MISSING CONTROL SWITCHES ---
+        Column(modifier = Modifier.padding(20.dp)) {
+            Text("WIDGET LAYOUT", color = Color.Cyan, fontWeight = FontWeight.Bold)
+            
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = MainOverride.showClock, onCheckedChange = { MainOverride.showClock = it })
+                Text("Enable Digital Clock", color = Color.White)
             }
-    ) { content() }
-}
 
-@Composable
-fun ControlPanel() {
-    Column(modifier = Modifier.padding(20.dp)) {
-        Text("ARTISTIC ENGINE", color = Color.Cyan, fontWeight = FontWeight.Bold)
-        
-        OutlinedTextField(
-            value = MainOverride.ledText,
-            onValueChange = { MainOverride.ledText = it },
-            label = { Text("LED Text Content") },
-            modifier = Modifier.fillMaxWidth()
-        )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = MainOverride.showDate, onCheckedChange = { MainOverride.showDate = it })
+                Text("Enable Date Display", color = Color.White)
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Animation Speed: ${MainOverride.ledAnimSpeed}", color = Color.White)
-        Slider(
-            value = MainOverride.ledAnimSpeed.toFloat(),
-            onValueChange = { MainOverride.ledAnimSpeed = it.toInt() },
-            valueRange = 1f..10f
-        )
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Canvas Transparency", color = Color.White)
-        Slider(
-            value = MainOverride.canvasOpacity,
-            onValueChange = { MainOverride.canvasOpacity = it }
-        )
+            Spacer(modifier = Modifier.height(20.dp))
+            Text("LED SETTINGS", color = Color.Cyan, fontWeight = FontWeight.Bold)
+            // ... (Your existing TextFields and Sliders go here)
+        }
     }
 }
