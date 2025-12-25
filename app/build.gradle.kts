@@ -5,26 +5,25 @@ plugins {
 
 android {
     namespace = "com.artistic.widget"
-    compileSdk = 33
+    compileSdk = 33 // Native Android 13 Support [cite: 2025-12-25]
 
     defaultConfig {
         applicationId = "com.artistic.widget"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 33 // Target API 33 [cite: 2025-12-25]
         versionCode = 1
         versionName = "1.0"
     }
 
     buildFeatures {
-        compose = true
+        compose = true // Enables the Advanced UI Engine [cite: 2025-12-25]
     }
     
-    // --- THIS FIXES THE BUILD FAILURE ---
+    // Aligns Java and Kotlin to Version 17 to prevent build crashes [cite: 2025-12-25]
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    // ------------------------------------
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
