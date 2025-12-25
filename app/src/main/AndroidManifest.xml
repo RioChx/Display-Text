@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <application
         android:allowBackup="true"
-        android:icon="@android:drawable/btn_star"
-        android:label="ArtisticWidget"
-        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
-
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Material.NoActionBar">
+        
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -15,8 +16,7 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".ArtisticWidgetProvider"
+        <receiver android:name=".ArtisticWidgetProvider"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
