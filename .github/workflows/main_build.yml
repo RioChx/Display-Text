@@ -14,11 +14,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle 8.7
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.7 # Forces a compatible version to stop the NoSuchMethodError
+          gradle-version: 8.7
 
-      - name: Build APK (Main Override Sync)
+      - name: Build APK
         run: gradle assembleDebug --no-daemon
 
       - name: Upload APK
