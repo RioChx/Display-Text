@@ -6,12 +6,19 @@ import android.content.Context
 import android.widget.RemoteViews
 
 class ArtisticWidgetProvider : AppWidgetProvider() {
-    override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        for (id in ids) {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        for (appWidgetId in appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId)
+        }
+    }
+
+    companion object {
+        fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
+            // Using MainOverride instead of MainControlRegistry
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
-            // Pulling the text directly from the Drag & Drop Override [cite: 2025-12-13]
-            views.setTextViewText(R.id.widget_text, MainControlRegistry.dragItemText)
-            manager.updateAppWidget(id, views)
+            views.setTextViewText(R.id.appwidget_text, MainOverride.ledText)
+            
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 }
