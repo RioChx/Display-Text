@@ -14,12 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset // <--- THIS WAS MISSING
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntOffset // <--- THIS WAS MISSING
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
@@ -38,17 +37,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WidgetPreview() {
     val infiniteTransition = rememberInfiniteTransition(label = "Anims")
-    
-    // Rainbow Color Shift
     val rainbowColor by infiniteTransition.animateColor(
         initialValue = Color.Cyan, targetValue = Color.Magenta,
         animationSpec = infiniteRepeatable(tween(2000), RepeatMode.Reverse), label = "Rainbow"
-    )
-
-    // 1Hz Colon Blink
-    val blinkAlpha by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 0f,
-        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse), label = "Blink"
     )
 
     Box(
@@ -66,17 +57,6 @@ fun WidgetPreview() {
                 fontWeight = FontWeight.Bold
             )
         }
-
-        // Draggable Clock
-        if (MainOverride.showClock) {
-            DraggableLayer(MainOverride.clockOffset, { MainOverride.clockOffset = it }) {
-                Row {
-                    Text("11", color = MainOverride.clockColor, fontSize = 58.sp, fontWeight = FontWeight.Bold)
-                    Text(":", color = MainOverride.clockColor.copy(alpha = blinkAlpha), fontSize = 58.sp, fontWeight = FontWeight.Bold)
-                    Text("24", color = MainOverride.clockColor, fontSize = 58.sp, fontWeight = FontWeight.Bold)
-                }
-            }
-        }
     }
 }
 
@@ -88,7 +68,6 @@ fun DraggableLayer(offset: Offset, onMove: (Offset) -> Unit, content: @Composabl
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
                     change.consume()
-                    // Sync back to Main Override Registry [cite: 2025-12-13]
                     onMove(Offset(offset.x + dragAmount.x, offset.y + dragAmount.y))
                 }
             }
